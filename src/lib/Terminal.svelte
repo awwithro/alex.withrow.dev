@@ -1,18 +1,37 @@
 <script>
 	import { onMount } from 'svelte';
 	import { baseTheme } from './themes';
-	import { fs } from './filesystem';
+	import FFS from 'fakefilesystem';
 
+	export let data;
+	let ffs = new FFS();
+	for (const dir of data.fileData.dirs) {
+		ffs.createDir(dir.path, dir.name);
+	}
+	for (const file of data.fileData.files) {
+		ffs.createFile(file.path, file.name, file.content);
+	}
 	let terminal;
 	let xterm;
 	let command = '';
-	let ps1 = `\r\n${fs.CWD()} $ `;
+	let ps1 = `\r\n${ffs.CWD()} $ `;
+	let history = [];
+	let historyIndex = 0;
+	const black = `\x1b[30m`;
+	const red = `\x1b[31m`;
+	const green = `\x1b[32m`;
+	const yellow = `\x1b[33m`;
+	const blue = `\x1b[34m`;
+	const magenta = `\x1b[35m`;
+	const cyan = `\x1b[36m`;
+	const white = `\x1b[37m`;
+	const clear = `\x1b[0m`;
+	const italic = `\x1b[3m`;
 
-	var commands = {
+	let commands = {
 		help: {
 			f: (term) => {
 				term.writeln('Help!\n\r');
-				console.log(commands);
 				for (let [name, cmd] of Object.entries(commands)) {
 					term.writeln(`${name}\t${cmd.help}`);
 				}
@@ -21,7 +40,7 @@
 		},
 		pwd: {
 			f: (term) => {
-				term.writeln(fs.CWD());
+				term.writeln(ffs.CWD());
 			},
 			help: 'Print the working dir'
 		},
@@ -35,16 +54,19 @@
 		ls: {
 			f: (term, path) => {
 				if (path == undefined) {
-					path = fs.CWD();
+					path = ffs.CWD();
 				}
-				var result = fs.getDirContent(path);
-				console.log(result);
-				if (result.success) {
-					result.result.forEach((e) => {
-						term.writeln(e.name);
+				let ls = ffs.getDirContent(path);
+				if (ls.success) {
+					ls.result.forEach((file) => {
+						let write = file.name;
+						if (file.type == 'directory') {
+							write = green + file.name + '/' + clear;
+						}
+						term.writeln(write);
 					});
 				} else {
-					term.writeln(result.error);
+					term.writeln(ls.error);
 				}
 			},
 			help: '<path> - list the contents of the given dir or the current dir'
@@ -54,7 +76,7 @@
 				if (path == undefined) {
 					path = '/';
 				}
-				let result = fs.changeDir(path);
+				let result = ffs.changeDir(path);
 				if (!result.success) {
 					term.writeln(result.error);
 				}
@@ -66,22 +88,27 @@
 				if (file == undefined) {
 					term.writeln('Usage: cat <filename>');
 				} else {
-					let result = fs.getFileContent(file);
-					console.log(result);
-					if (result.success) {
-						let content = fs.getFileContent(file);
-						term.writeln(content.result);
+					let content = ffs.getFileContent(file);
+					if (content.success) {
+						term.writeln(content.result.replaceAll('\n', '\n\r'));
 					} else {
-						term.writeln(result.error);
+						term.writeln(content.error);
 					}
 				}
 			},
 			help: '<file> - display the contents of the given file'
+		},
+		welcome: {
+			f: (term) => {
+				welcomeText(term);
+			},
+			help: 'Display the initial welcome text'
 		}
 	};
 	function prompt(term) {
 		command = '';
-		ps1 = `\r\n${fs.CWD()} $ `;
+		historyIndex = 0;
+		ps1 = `\r\n${ffs.CWD()} $ `;
 		term.write(ps1);
 	}
 
@@ -100,29 +127,79 @@
 	}
 
 	function initializeTerminal() {
-		var term = new xterm.Terminal({
+		let term = new xterm.Terminal({
 			fontFamily: '"Cascadia Code", Menlo, monospace',
 			theme: baseTheme,
 			cursorBlink: true,
 			allowProposedApi: true
 		});
 		term.open(terminal);
+		welcomeText(term);
 		prompt(term);
+		term.focus();
+		term.write('\x9b4h');
 		term.onData((e) => {
 			switch (e) {
-				case '\r':
+				case '\r': // Enter
 					runCommand(term, command);
+					if (history.at(-1) != command && command != '') {
+						history.push(command);
+					}
 					command = '';
 					prompt(term);
 					break;
 				case '\u007F': // Backspace (DEL)
 					// Do not delete the prompt
 					if (term._core.buffer.x > ps1.length - 2) {
-						term.write('\b \b');
+						term.write('\b\x9B1P');
 						if (command.length > 0) {
 							command = command.substr(0, command.length - 1);
 						}
 					}
+					break;
+				case `\x1b[D`: //left-arrow
+					if (term._core.buffer.x > ps1.length - 2) {
+						term.write('\b');
+					}
+					break;
+				case `\x1b[C`: //right-arrow
+					if (term._core.buffer.x < command.length + ps1.length - 2) {
+						term.write('\x9BC');
+					}
+					break;
+				case `\x1b[A`: //up-arrow
+					if (command.length > 0) {
+						term.write(`\x9B${command.length}D\x9B${command.length}P`);
+						command = '';
+					}
+					if (history.length > 0) {
+						historyIndex++;
+						if (historyIndex >= history.length) {
+							historyIndex = history.length;
+						}
+						let cmd = history[history.length - historyIndex];
+						term.write(cmd);
+						command = cmd;
+					}
+					break;
+				case `\x1b[B`: //down-arrow
+					if (command.length > 0) {
+						term.write(`\x9B${command.length}D\x9B${command.length}P`);
+						command = '';
+					}
+					if (history.length > 0) {
+						historyIndex--;
+						if (historyIndex < 0) {
+							historyIndex = 0;
+						}
+						if (historyIndex != 0) {
+							let cmd = history[history.length - historyIndex];
+							term.write(cmd);
+							command = cmd;
+						}
+					}
+					break;
+				case '\t':
 					break;
 				case '\u0003': // Ctrl+C
 					term.write('^C');
@@ -138,11 +215,44 @@
 		});
 	}
 
+	function welcomeText(term) {
+		term.writeln(
+			[
+				'    This is an emulated terminal version of the website made with XTerm.js',
+				'      all the various pages are available via this cli tool.',
+				` ┌ ${white}Features${clear} ──────────────────────────────────────────────────────────────────┐`,
+				' │                                                                            │',
+				` │  ${green}Directories${clear}                            ${cyan}Text Files${clear}                         │`,
+				' │   Directories are green.                 Text files can be read.           │',
+				` │   use ${italic}cd${clear} to change                       use ${italic}cat${clear} to display them           │`,
+				' │                                                                            │',
+				` │  ${yellow}History${clear} ${italic}todo${clear}                           ${blue}Tab Completion${clear} ${italic}todo${clear}                │`,
+				' │   Arrows can be used for                 Zero external dependencies        │',
+				' │   seeing your command history                                              │',
+				' │                                                                            │',
+				` │  ${magenta}Unicode support                        ${red}And much more...${clear}                   │`,
+				` │   Supports CJK 語 and emoji \u2764\ufe0f            Type the ${italic}help${clear} command             │`,
+				' │                                          to see what is available          │',
+				' │                                                                            │',
+				' └────────────────────────────────────────────────────────────────────────────┘',
+				''
+			].join('\n\r')
+		);
+	}
+
 	onMount(async () => {
 		xterm = await import('xterm');
 		initializeTerminal();
 	});
 </script>
 
-<link rel="stylesheet" href="node_modules/xterm/css/xterm.css" />
+<link rel="stylesheet" href="xterm.css" />
 <div id="terminal" bind:this={terminal} />
+
+<style>
+	#terminal {
+		display: flex;
+		justify-content: center;
+		margin: 2pc;
+	}
+</style>
