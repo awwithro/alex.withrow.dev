@@ -13,9 +13,10 @@
 	}
 	let terminal;
 	let xterm;
+	let addon;
 	let command = '';
-	let ps1 = `\r\n${ffs.CWD()} $ `;
 	let history = [];
+	let displayedHints = false;
 	let historyIndex = 0;
 	const black = `\x1b[30m`;
 	const red = `\x1b[31m`;
@@ -27,7 +28,8 @@
 	const white = `\x1b[37m`;
 	const clear = `\x1b[0m`;
 	const italic = `\x1b[3m`;
-
+	var ps1 = `\r\n${yellow}visitor${clear}@${blue}awithrow.dev${clear}:${ffs.CWD()} $ `;
+	let ps1Offset = 20; // lenght of non visible chars
 	let commands = {
 		help: {
 			f: (term) => {
@@ -108,7 +110,6 @@
 	function prompt(term) {
 		command = '';
 		historyIndex = 0;
-		ps1 = `\r\n${ffs.CWD()} $ `;
 		term.write(ps1);
 	}
 
@@ -133,12 +134,20 @@
 			cursorBlink: true,
 			allowProposedApi: true
 		});
+		term.loadAddon(new addon.WebLinksAddon());
 		term.open(terminal);
 		welcomeText(term);
 		prompt(term);
 		term.focus();
 		term.write('\x9b4h');
 		term.onData((e) => {
+			if (displayedHints) {
+				term.write(`\x9Bs`); // save cursor
+				term.write(`\n\r`); // next line
+				term.write(`\x9B1M`); // delete hints line
+				term.write(`\x9Bu`); //restore cursor
+				displayedHints = false;
+			}
 			switch (e) {
 				case '\r': // Enter
 					runCommand(term, command);
@@ -150,7 +159,7 @@
 					break;
 				case '\u007F': // Backspace (DEL)
 					// Do not delete the prompt
-					if (term._core.buffer.x > ps1.length - 2) {
+					if (term._core.buffer.x > ps1.length - ps1Offset) {
 						term.write('\b\x9B1P');
 						if (command.length > 0) {
 							command = command.substr(0, command.length - 1);
@@ -158,12 +167,12 @@
 					}
 					break;
 				case `\x1b[D`: //left-arrow
-					if (term._core.buffer.x > ps1.length - 2) {
+					if (term._core.buffer.x > ps1.length - 20) {
 						term.write('\b');
 					}
 					break;
 				case `\x1b[C`: //right-arrow
-					if (term._core.buffer.x < command.length + ps1.length - 2) {
+					if (term._core.buffer.x < command.length + ps1.length - ps1Offset) {
 						term.write('\x9BC');
 					}
 					break;
@@ -200,6 +209,58 @@
 					}
 					break;
 				case '\t':
+					let hints = [];
+					let line = command.split(' ');
+					// a command is started
+					if (line.length == 2) {
+						if (['cat'].includes(line[0])) {
+							let files = ffs.getDirContent(ffs.CWD());
+							if (files.success) {
+								files.result.forEach((file) => {
+									if (file.type == 'file' && file.name.startsWith(line[1])) {
+										hints.push(file.name);
+									}
+								});
+							}
+						} else if (['cd', 'ls'].includes(line[0])) {
+							let dirs = ffs.getDirContent(ffs.CWD());
+							if (line[1].length == 0) {
+								hints.push('./');
+								hints.push('../');
+							}
+							if (dirs.success) {
+								dirs.result.forEach((dir) => {
+									if (dir.type == 'directory' && dir.name.startsWith(line[1])) {
+										hints.push(dir.name);
+									}
+								});
+							}
+						}
+					} else {
+						for (let cmd in commands) {
+							if (cmd.startsWith(command)) {
+								hints.push(cmd);
+							}
+						}
+					}
+					if (hints.length == 1) {
+						let cmd;
+						if (line.length == 1) {
+							cmd = hints[0].substring(command.length);
+						} else {
+							cmd = hints[0].substring(line[1].length);
+						}
+						cmd += ' ';
+						command += cmd;
+						term.write(cmd);
+					} else if (hints.length > 1) {
+						term.write(`\x9Bs`); // save cursor
+						term.write(`\n\r`); // next line
+						let hintTxt = hints.join(' ');
+						term.write(hintTxt);
+						term.write(`\x9Bu`); //restore cursor
+						displayedHints = true;
+					}
 					break;
 				case '\u0003': // Ctrl+C
 					term.write('^C');
@@ -226,13 +287,13 @@
 				' │   Directories are green.                 Text files can be read.           │',
 				` │   use ${italic}cd${clear} to change                       use ${italic}cat${clear} to display them           │`,
 				' │                                                                            │',
-				` │  ${yellow}History${clear} ${italic}todo${clear}                           ${blue}Tab Completion${clear} ${italic}todo${clear}                │`,
-				' │   Arrows can be used for                 Zero external dependencies        │',
-				' │   seeing your command history                                              │',
+				` │  ${yellow}History${clear}                                ${blue}Tab Completion${clear}                     │`,
+				` │   Arrows can be used for                 Use ${italic}tab${clear} to show command           │`,
+				' │   seeing your command history            completion options                │',
 				' │                                                                            │',
-				` │  ${magenta}Unicode support                        ${red}And much more...${clear}                   │`,
-				` │   Supports CJK 語 and emoji \u2764\ufe0f            Type the ${italic}help${clear} command             │`,
-				' │                                          to see what is available          │',
+				` │  ${magenta}Clickable links                        ${red}And much more...${clear}                   │`,
+				` │   Any links that are rendered            Type the ${italic}help${clear} command             │`,
+				' │   can be clicked on                      to see what is available          │',
 				' │                                                                            │',
 				' └────────────────────────────────────────────────────────────────────────────┘',
 				''
@@ -242,6 +303,7 @@
 
 	onMount(async () => {
 		xterm = await import('xterm');
+		addon = await import('xterm-addon-web-links');
 		initializeTerminal();
 	});
 </script>
