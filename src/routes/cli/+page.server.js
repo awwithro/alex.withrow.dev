@@ -9,7 +9,7 @@ async function parseDir(dir, data, pth="/"){
             data.dirs.push({path: pth, name: file.name})
             let newDir = path.join(dir, file.name)
             let newPath = path.join(pth, file.name)
-            parseDir(newDir, data, newPath)
+            await parseDir(newDir, data, newPath)
         } else{
             let fullName = path.join(dir,file.name)
             let content
@@ -34,7 +34,6 @@ export async function load(){
         files: []
     }
     await parseDir("./src/md", fileData);
-    
     return{
         fileData: fileData
     }

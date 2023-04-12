@@ -7,7 +7,7 @@
 </svelte:head>
 <header>
 	<nav>
-		<a href="/">awithrow.dev</a>
+		<a href="/">alex.withrow.dev</a>
 		<span class="links">
 			<a href="/projects">Projects</a>
 			<a href="/about">About</a>

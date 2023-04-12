@@ -28,7 +28,7 @@
 	const white = `\x1b[37m`;
 	const clear = `\x1b[0m`;
 	const italic = `\x1b[3m`;
-	var ps1 = `\r\n${yellow}visitor${clear}@${blue}awithrow.dev${clear}:${ffs.CWD()} $ `;
+	var ps1 = `\r\n${yellow}visitor${clear}@${blue}alex.withrow.dev${clear}:${ffs.CWD()} $ `;
 	let ps1Offset = 20; // lenght of non visible chars
 	let commands = {
 		help: {
