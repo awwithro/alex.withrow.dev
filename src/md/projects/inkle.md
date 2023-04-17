@@ -1,6 +1,6 @@
 # Inkle Related
 
-I found out about [inkle](https://www.inklestudios.com) after playing the wonderful game [80 Days](https://www.inklestudios.com/80days/). Inkle open-sourced many pieces of their toolchain that they used for creating the narritive portions of their game. [Ink](https://github.com/inkle/ink) is the scripting language used under the covers. I wanted to play around with it but unfortunately (for me) it is written in C#
+I found out about [inkle](https://www.inklestudios.com) after playing the wonderful game [80 Days](https://www.inklestudios.com/80days/). Inkle open-sourced many pieces of their toolchain that they used for creating the narrative portions of their game. [Ink](https://github.com/inkle/ink) is the scripting language used under the covers. I wanted to play around with it but unfortunately (for me) it is written in C#
 
 ## Ink Grpc Runtime
 

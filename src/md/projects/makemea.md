@@ -22,6 +22,6 @@ https://makemea.withrow.dev/
 
 With my server/API made for the tool, I built a UI around it. This used Gatsby/React mostly since I'd not used those tools before and this was a good excuse to play around with them. I added some nice features to it including the ability to reroll items, or sub-properties of items to make adjustments on the fly. It also allows me to have a record of things as I roll them. I use this extensively while DMing games.
 
-## Slack Verison
+## Slack Version
 
-It was also handy to share the API with firends in a slack group. With an API its easy to write a slack client.
+It was also handy to share the API with friends in a slack group. With an API it's easy to write a slack client.

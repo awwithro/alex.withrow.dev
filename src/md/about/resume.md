@@ -16,7 +16,7 @@
 * Designed and built the infrastructure for Ouroboros, a service for automating SLO creation and monitoring
 * Worked with Junior SRE team members of design and implementation of Ouroboros backend components
 * Successfully executed the transition of the Metrics Service from the Platform team to the SRE team
-* Perfomed SRE engagements with partner teams to asses reliability of services and develop SLOs and SLIs for measuring success
+* Performed SRE engagements with partner teams to asses reliability of services and develop SLOs and SLIs for measuring success
 * Approved by Security as a Level 2 reviewer for assessing code for security issues and quality
 
 ### Heptio/VMWare
@@ -80,7 +80,7 @@
 
 #### Systems Engineer
 
-* Installed, configured, and maintained dozens of Weblogic servers in multiple development, test, and operational environments 
+* Installed, configured, and maintained dozens of Weblogic servers in multiple development, test, and operational environments
 * Developed deployment scripts using Jython/WLST for the deployment of custom code to Weblogic servers, the configuration of FJNDI links, JDBC connection configuration, and JMS configurations.
 * Developed utility scripts and websites using Python, PHP, MySQL, Apache to build and maintain internal sites for environment status, resource allocation, and property configurations.
 
