@@ -1,8 +1,8 @@
 FROM node:current-alpine
 
 
-RUN mkdir awithrow.dev
-WORKDIR /awithrow.dev
+RUN mkdir alex.withrow.dev
+WORKDIR /alex.withrow.dev
 
 RUN apk update && apk add go
 RUN go install github.com/charmbracelet/glow@latest && cp /root/go/bin/glow /bin
