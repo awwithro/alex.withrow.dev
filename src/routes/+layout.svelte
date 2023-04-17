@@ -9,9 +9,9 @@
 	<nav>
 		<a href="/">alex.withrow.dev</a>
 		<span class="links">
-			<a href="/projects">Projects</a>
 			<a href="/about">About</a>
 			<a href="/resume">Resume</a>
+			<a href="/projects">Projects</a>
 			<a href="/cli">CLI</a>
 			<ThemeSwitch />
 		</span>
