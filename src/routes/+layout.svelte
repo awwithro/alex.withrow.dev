@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-	<title>awithrow.dev</title>
+	<title>alex.withrow.dev</title>
 </svelte:head>
 <header>
 	<nav>
@@ -11,6 +11,7 @@
 		<span class="links">
 			<a href="/projects">Projects</a>
 			<a href="/about">About</a>
+			<a href="/resume">Resume</a>
 			<a href="/cli">CLI</a>
 			<ThemeSwitch />
 		</span>
