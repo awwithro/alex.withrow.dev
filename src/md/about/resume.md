@@ -2,7 +2,7 @@
 
 ## Professional Experience
 
-* [Artisan Insight, Inc.](/resume#artsian-insight) November, 2023 - Current
+* [Artisan Insight, Inc.](/resume#artisan-insight) November, 2023 - Current
 * [Bridgewater Associates](/resume#bridgewater-associates) November, 2021 - March, 2023
 * [Heptio/VMWare](/resume#heptiovmware) August, 2018 - November, 2021
 * [Ibotta](/resume#ibotta) April, 2017 - July, 2018
