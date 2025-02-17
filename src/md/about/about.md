@@ -1,6 +1,7 @@
 # About Me
 
-I'm a Site Reliability Engineer based out of Denver, Colorado
+Co-Founder of (Artisan Insight)[www.artisaninsight.com]
+CFO and head of software
 
 ## Work
 

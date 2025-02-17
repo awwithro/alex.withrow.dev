@@ -2,12 +2,19 @@
 
 ## Professional Experience
 
+* [Artisan Insight, Inc.](/resume#artsian-insight) November, 2023 - Current
 * [Bridgewater Associates](/resume#bridgewater-associates) November, 2021 - March, 2023
 * [Heptio/VMWare](/resume#heptiovmware) August, 2018 - November, 2021
 * [Ibotta](/resume#ibotta) April, 2017 - July, 2018
 * [Ping Identity](/resume#ping-identity) October, 2015 - April, 2017
 * [AWS](/resume#amazon-web-services-s3) November, 2013 -  October, 2015
 * [Lockheed Martin](/resume#lockheed-martin) June, 2007 - November 2013
+
+### Artisan Insight
+
+#### Co-Founder & Head of Software
+
+* Anything and everything to take-off before the end of the runway
 
 ### Bridgewater Associates
 
@@ -56,7 +63,7 @@
 * Member of On-call rotation for PingOne, Ping Identity’s IDaaS product spanning multiple AWS regions and composed of 100s of instances.
 * Responsible for managing production & development environments, server configuration, monitoring & alerting configuration, public DNS, and AWS Infrastructure.
 * Began the process of using Terraform to manage Ping’s AWS infrastructure as code.
-* Authored numerous scripts and chatbots to assist with day-to-day activities.
+* Authored numerous scripts and chat-bots to assist with day-to-day activities.
 
 ### Amazon Web Services, S3
 
@@ -73,7 +80,7 @@
 
 #### Senior Software Engineer
 
-* Member of the IDOS-G2 program supporting GIMS: a Geospatial Intelligence System built upon Linux, J2EE, Weblogic and using SOA.
+* Member of the IDOS-G2 program supporting GIMS: a Geo-spatial Intelligence System built upon Linux, J2EE, Weblogic and using SOA.
 * Primary responsibility was maintaining the 24/7/365 availability of the operational system consisting of over 200 servers.
 * Roles included performing deployments of the latest versions of software, developing monitoring tools using BASH and Python, troubleshooting issues and errors, and testing interfaces with external partners located across the globe.
 * Subject-matter expert for the program's SOA infrastructure.
