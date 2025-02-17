@@ -1,7 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import { baseTheme } from './themes';
-	import FFS from 'fakefilesystem';
+	import FFS from '$lib/ffs.js';
 
 	export let data;
 	let ffs = new FFS();
