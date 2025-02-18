@@ -4,7 +4,7 @@
 	<ul>
 		<li><a href="https://github.com/awwithro">github</a></li>
 		<li><a href="https://www.linkedin.com/in/alex-withrow/">linkedin</a></li>
-		<li><a href="mailto:awithrow@gmail.com">email</a></li>
+		<li><a href="mailto:alex@withrow.dev">email</a></li>
 	</ul>
 </about>
 
