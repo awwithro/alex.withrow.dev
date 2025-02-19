@@ -6,7 +6,7 @@ export async function load({ params }){
     try{
        md = await readFile(`./src/md/projects/${params.project}.md`, {encoding: 'utf8' })
     } catch{
-        throw error(404, 'Not Found')
+        error(404, 'Not Found');
     }
     return{
         markdown: md
