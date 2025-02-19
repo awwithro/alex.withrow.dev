@@ -3,7 +3,7 @@
 	import { baseTheme } from './themes';
 	import FFS from '$lib/ffs.js';
 
-	export let data;
+	let { data } = $props();
 	let ffs = new FFS();
 	for (const dir of data.fileData.dirs) {
 		ffs.createDir(dir.path, dir.name);
@@ -11,7 +11,7 @@
 	for (const file of data.fileData.files) {
 		ffs.createFile(file.path, file.name, file.content);
 	}
-	let terminal;
+	let terminal = $state();
 	let xterm;
 	let addon;
 	let command = '';
@@ -309,7 +309,7 @@
 </script>
 
 <link rel="stylesheet" href="xterm.css" />
-<div id="terminal" bind:this={terminal} />
+<div id="terminal" bind:this={terminal}></div>
 
 <style>
 	#terminal {

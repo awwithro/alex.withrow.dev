@@ -48,7 +48,7 @@
 <button
 	class="color-mode__btn light--hidden"
 	aria-label="Turn on light mode"
-	on:click={toggleColorMode}
+	onclick={toggleColorMode}
 >
 	<svg aria-hidden="true"><use href="#sm-sun-icon" /></svg>
 </button>
@@ -57,7 +57,7 @@
 <button
 	class="color-mode__btn dark--hidden"
 	aria-label="Turn on dark mode"
-	on:click={toggleColorMode}
+	onclick={toggleColorMode}
 >
 	<svg aria-hidden="true"><use href="#sm-moon-icon" /></svg>
 </button>

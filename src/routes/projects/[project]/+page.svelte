@@ -1,6 +1,6 @@
 <script>
 	import Markdown from '@magidoc/plugin-svelte-marked';
-	export let data;
+	let { data } = $props();
 </script>
 
 <Markdown source={data.markdown} />

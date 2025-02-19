@@ -1,5 +1,12 @@
 <script>
 	import ThemeSwitch from '$lib/ThemeSwitch/ThemeSwitch.svelte';
+	/**
+	 * @typedef {Object} Props
+	 * @property {import('svelte').Snippet} [children]
+	 */
+
+	/** @type {Props} */
+	let { children } = $props();
 </script>
 
 <svelte:head>
@@ -19,7 +26,7 @@
 </header>
 
 <article>
-	<slot />
+	{@render children?.()}
 </article>
 
 <style>

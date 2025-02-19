@@ -1,6 +1,6 @@
 <script>
 	import MdPage from '$lib/MDPage.svelte';
-	export let data;
+	let { data } = $props();
 </script>
 
 <MdPage markdown={data.markdown} />
