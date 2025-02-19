@@ -1,6 +1,6 @@
 # About Me
 
-Co-Founder of (Artisan Insight)[www.artisaninsight.com]
+Co-Founder of [Artisan Insight](https://www.artisaninsight.com)
 CFO and head of software
 
 ## Work
